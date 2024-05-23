@@ -35,8 +35,6 @@ export class AuthService {
       expiresIn: "14d",
     });
 
-    console.log("Tokens : ", accessToken, refreshToken);
-
     return { accessToken, refreshToken };
   }
 
@@ -58,8 +56,19 @@ export class AuthService {
       expiresIn: "14d",
     });
 
-    console.log("Tokens : ", accessToken, refreshToken);
-
     return { accessToken, refreshToken };
   }
+
+  //   async refresh(token) {
+  //     //decode
+  //     const user = await database.user.findUnique();
+
+  //     const refreshToken = jwt.sign({ id: userId }, process.env.JWT_KEY!, {
+  //         expiresIn: "2h",
+  //       });
+
+  //     const refreshToken = jwt.sign({ id: userId }, process.env.JWT_KEY!, {
+  //       expiresIn: "2h",
+  //     });
+  //   }
 }

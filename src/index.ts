@@ -3,19 +3,30 @@ import cors from "cors";
 import helmet from "helmet";
 import Controllers from "./models";
 import { authJWT } from "./middleware";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = 8000;
+const originUrl = "http://localhost:3000";
+
+const corsOptions = {
+  origin: "http://localhost:3000", // 클라이언트 도메인 명시
+  credentials: true, // 자격 증명(쿠키) 허용
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Middleware
 app.use(helmet());
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: "700mb" }));
 // app.use(authJWT);
 
 Controllers.forEach((controller) => {
-  app.use(controller.path, controller.router);
+  app.use("/api" + controller.path, controller.router);
 });
 // Routes
 app.get("/", (req: Request, res: Response) => {

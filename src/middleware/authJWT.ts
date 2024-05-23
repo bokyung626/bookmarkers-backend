@@ -19,7 +19,7 @@ export const authJWT = async (
     const headers = req.headers;
 
     // Brearer ${token} or undefined
-    const authorization = headers.Authorization || headers.authorization;
+    const authorization = headers.Authorization;
 
     if (
       authorization &&
