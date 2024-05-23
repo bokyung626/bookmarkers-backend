@@ -25,11 +25,15 @@ export class BookController {
     };
 
     try {
-      const res = await axios.get(
-        "https://openapi.naver.com/v1/search/blog",
+      const bookinfo = await axios.get(
+        "https://openapi.naver.com/v1/search/book_adv.json?d_titl=작은아씨들&display=10",
         options
       );
-      console.log(res);
+
+      if (bookinfo.status === 200) {
+        console.log(bookinfo.data);
+        res.status(200).json(bookinfo);
+      }
     } catch (error) {
       console.log(error);
     }
