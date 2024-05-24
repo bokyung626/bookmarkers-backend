@@ -11,7 +11,7 @@ export class BookController {
   }
 
   init() {
-    this.router.get("/search", this.searchBook.bind(this));
+    this.router.post("/search", this.searchBook.bind(this));
   }
 
   async searchBook(req: Request, res: Response, next: NextFunction) {
@@ -22,20 +22,31 @@ export class BookController {
         "X-Naver-Client-Id": process.env.NAVER_BOOK_CLIENT_ID,
         "X-Naver-Client-Secret": process.env.NAVER_BOOK_APP_CLIENT_SECRET,
       },
+      params: {
+        d_titl: body.d_titl,
+        display: 20,
+        start: body.start,
+      },
     };
 
     try {
       const bookinfo = await axios.get(
-        "https://openapi.naver.com/v1/search/book_adv.json?d_titl=작은아씨들&display=10",
+        "https://openapi.naver.com/v1/search/book_adv.json",
         options
       );
 
       if (bookinfo.status === 200) {
         console.log(bookinfo.data);
-        res.status(200).json(bookinfo);
+        res.status(200).json(bookinfo.data);
+      } else {
+        res
+          .status(bookinfo.status)
+          .json({ error: "책 정보를 불러오는데 실패했습니다." });
       }
     } catch (error) {
-      console.log(error);
+      res
+        .status(500)
+        .json({ status: 500, message: "서버에 문제가 발생했습니다." });
     }
   }
 }
