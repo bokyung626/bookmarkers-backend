@@ -19,7 +19,7 @@ export const authJWT = async (
     const headers = req.headers;
 
     // Brearer ${token} or undefined
-    const authorization = headers.Authorization;
+    const authorization = headers.authorization;
 
     if (
       authorization &&
@@ -44,6 +44,7 @@ export const authJWT = async (
         req.user = user;
         next(); // 미들웨어를 통과해 다음 단계로 넘어감
       } else {
+        //  DB에 해당 userId를 가진 user가 존재하지 않는 경우
         next({ status: 404, message: "유저를 찾을 수 없습니다." });
       }
     } else {

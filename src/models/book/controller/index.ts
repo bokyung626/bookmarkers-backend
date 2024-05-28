@@ -17,7 +17,6 @@ export class BookController {
 
   async searchBookByName(req: Request, res: Response, next: NextFunction) {
     const body = await req.body;
-
     const options = {
       headers: {
         "X-Naver-Client-Id": process.env.NAVER_BOOK_CLIENT_ID,
@@ -37,7 +36,6 @@ export class BookController {
       );
 
       if (bookinfo.status === 200) {
-        console.log(bookinfo.data);
         res.status(200).json(bookinfo.data);
       } else {
         res
@@ -52,7 +50,6 @@ export class BookController {
   }
 
   async searchBookByISBN(req: Request, res: Response, next: NextFunction) {
-    console.log("책 찾을게용");
     const body = req.body;
     const options = {
       headers: {

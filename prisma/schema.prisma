@@ -19,33 +19,34 @@ model User{
   email String @db.VarChar(200) @unique
   nickname String @db.VarChar(100) @unique
   password String
-  profileUrl String?
+  profileImage String?
 
   reviews Review[]
   comments Comment[]
 }
 
 model Book{
-  id String @id @default(uuid())
-
-  title String 
-  author String
-  isbn String
-  genre String
-  publicationYear DateTime
-
+  isbn String @db.VarChar(100) @id
+  title String @db.VarChar(100)
+  publisher String @db.VarChar(100)
+  image String @db.VarChar(300)
+  description String @db.MediumText
+  author String @db.VarChar(100)
+  pubdate String @db.VarChar(100)
+ 
   reviews Review[]
 }
 
 model Review{
   id String @id @default(uuid())
 
-  title String @db.VarChar(300)
+  title String @db.VarChar(200)
   content String @db.LongText
+  memory String @db.VarChar(1000)
   createdAt DateTime @default(now())
 
-  bookId String
-  book Book @relation(fields: [bookId], references: [id])
+  isbn String
+  book Book @relation(fields: [isbn], references: [isbn])
   userId String
   user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
