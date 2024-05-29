@@ -9,7 +9,7 @@ interface User {
   email: string;
   nickname: string;
   password: string;
-  profileImage: string | null;
+  profileImage: string;
 }
 
 export class ReviewController {
@@ -24,11 +24,23 @@ export class ReviewController {
   }
 
   init() {
-    this.router.get("/", this.searchReviewById.bind(this));
+    this.router.get("/:id", this.searchReviewById.bind(this));
+    this.router.get("/isbn/:id", this.searchReviewByISBN.bind(this));
     this.router.post("/", authJWT, this.createReview.bind(this));
   }
 
-  async searchReviewById(req: Request, res: Response, next: NextFunction) {}
+  async searchReviewById(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    // const book = await this.reviewService.getReview(id);
+  }
+
+  async searchReviewByISBN(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const reviews = await this.reviewService.getReviews(id);
+
+    res.status(200).json(reviews);
+  }
+
   async createReview(req: Request, res: Response, next: NextFunction) {
     try {
       const body = req.body;

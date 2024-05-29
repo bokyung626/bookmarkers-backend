@@ -3,12 +3,25 @@ import { writeReviewDTO } from "../dto/writeReview.dto";
 import { BookService } from "../../book/service";
 import { findBookbyISBN } from "../../../utils/naverAPI";
 import { addBookDTO } from "../../book/dto/addBook.dto";
-import dayjs from "dayjs";
+import { ReviewDTO } from "../dto/review.dto";
 
 export class ReviewService {
   bookService;
   constructor() {
     this.bookService = new BookService();
+  }
+
+  async getReviews(isbn: string) {
+    const reviews = await database.review.findMany({
+      where: {
+        isbn,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return reviews.map((review) => new ReviewDTO(review));
   }
 
   async createReview(props: writeReviewDTO) {

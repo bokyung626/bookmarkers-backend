@@ -11,6 +11,7 @@ export class BookController {
   }
 
   init() {
+    //naverAPI로 부터 책 정보 불러옴
     this.router.post("/searchByName", this.searchBookByName.bind(this));
     this.router.post("/searchByISBN", this.searchBookByISBN.bind(this));
   }
@@ -67,7 +68,7 @@ export class BookController {
       );
 
       if (book.status === 200) {
-        console.log(book.data);
+        //console.log(book.data);
         res.status(200).json(book.data.items[0]);
       }
     } catch (error) {

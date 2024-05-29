@@ -7,7 +7,7 @@ export class RegisterDTO {
   nickname: string;
   email: string;
   password: string;
-  profileUrl: string;
+  profileImage: string;
 
   constructor(props: {
     nickname: string;
@@ -18,7 +18,7 @@ export class RegisterDTO {
     this.nickname = props.nickname;
     this.email = props.email;
     this.password = props.password;
-    this.profileUrl = props.profileUrl ?? undefined;
+    this.profileImage = props.profileUrl ?? undefined;
   }
 
   async hashPassword() {
