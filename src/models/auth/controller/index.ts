@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { AuthService } from "../service";
 import { LoginDTO, RegisterDTO } from "../dto";
+import { authJWT } from "../../../middleware";
 
 export class AuthController {
   router;
@@ -16,6 +17,7 @@ export class AuthController {
   init() {
     this.router.post("/login", this.login.bind(this));
     this.router.post("/register", this.register.bind(this));
+    this.router.post("/refresh", this.refresh.bind(this));
   }
 
   // 회원가입 API
@@ -56,6 +58,30 @@ export class AuthController {
       res.status(200).json({
         accessToken,
         refreshToken,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async refresh(req: Request, res: Response, next: NextFunction) {
+    try {
+      console.log("리프레시 토큰 발급 요청");
+      const accessToken = req.body.accessToken;
+      const refreshToken = req.cookies.refreshToken;
+
+      // refresh token이 없는 경우
+      if (!refreshToken)
+        throw { status: 403, message: "리프레시 토큰이 없습니다." };
+
+      // 새로운 access token 발급
+      const newAccessToken = await this.authService.refresh(
+        accessToken,
+        refreshToken
+      );
+
+      res.status(200).json({
+        accessToken: newAccessToken,
       });
     } catch (error) {
       next(error);

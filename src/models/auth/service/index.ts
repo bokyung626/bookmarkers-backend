@@ -7,6 +7,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+interface Token {
+  id: string;
+  iat: number;
+  exp: number;
+}
+
 export class AuthService {
   userService;
 
@@ -59,16 +65,33 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  //   async refresh(token) {
-  //     //decode
-  //     const user = await database.user.findUnique();
+  async refresh(accessToken: string, refreshToken: string) {
+    const accessTokenPayload = jwt.verify(accessToken, process.env.JWT_KEY!, {
+      ignoreExpiration: true, // 토큰 만료 여부를 신경쓰지 않겠다.
+    }) as Token;
 
-  //     const refreshToken = jwt.sign({ id: userId }, process.env.JWT_KEY!, {
-  //         expiresIn: "2h",
-  //       });
+    const refreshTokenPayload = jwt.verify(
+      refreshToken,
+      process.env.JWT_KEY!
+    ) as Token;
 
-  //     const refreshToken = jwt.sign({ id: userId }, process.env.JWT_KEY!, {
-  //       expiresIn: "2h",
-  //     });
-  //   }
+    if (accessTokenPayload.id !== refreshTokenPayload.id) {
+      throw { status: 403, message: "권한이 없습니다." };
+    }
+
+    const user = await this.userService.findUserById(accessTokenPayload.id);
+
+    // 토큰 발급
+    const newAccessToken = jwt.sign({ id: user.id }, process.env.JWT_KEY!, {
+      expiresIn: "6h",
+    });
+
+    // // Refresh Token
+    // // const newRefreshToken = jwt.sign({ id: user.id }, process.env.JWT_KEY!, {
+    // //   expiresIn: "14d",
+    // // });
+
+    return newAccessToken;
+    // newRefreshToken,
+  }
 }

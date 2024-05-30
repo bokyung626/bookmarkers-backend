@@ -18,7 +18,7 @@ export const authJWT = async (
   try {
     const headers = req.headers;
 
-    // Brearer ${token} or undefined
+    // Brearer ${token} or null
     const authorization = headers.authorization;
 
     if (
@@ -52,11 +52,11 @@ export const authJWT = async (
       // bearer에 문제가 있는 경우
       next({
         status: 401,
-        message:
-          "유효하지 않은 사용자 입니다. 로그인을 진행하거나 토큰을 재발급 받아주세요.",
+        message: "유효하지 않은 사용자 입니다. 로그인을 진행해 주세요",
       });
     }
   } catch (error: any) {
+    // access token 만료 등의 사유
     next({ ...error, status: 403 });
   }
 };

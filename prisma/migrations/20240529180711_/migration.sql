@@ -4,6 +4,7 @@ CREATE TABLE `User` (
     `email` VARCHAR(200) NOT NULL,
     `nickname` VARCHAR(100) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
+    `profileImage` VARCHAR(191) NULL,
 
     UNIQUE INDEX `User_email_key`(`email`),
     UNIQUE INDEX `User_nickname_key`(`nickname`),
@@ -12,23 +13,25 @@ CREATE TABLE `User` (
 
 -- CreateTable
 CREATE TABLE `Book` (
-    `id` VARCHAR(191) NOT NULL,
-    `title` VARCHAR(191) NOT NULL,
-    `author` VARCHAR(191) NOT NULL,
-    `isbn` VARCHAR(191) NOT NULL,
-    `genre` VARCHAR(191) NOT NULL,
-    `publicationYear` DATETIME(3) NOT NULL,
+    `isbn` VARCHAR(100) NOT NULL,
+    `title` VARCHAR(100) NOT NULL,
+    `publisher` VARCHAR(100) NOT NULL,
+    `image` VARCHAR(300) NOT NULL,
+    `description` MEDIUMTEXT NOT NULL,
+    `author` VARCHAR(100) NOT NULL,
+    `pubdate` VARCHAR(100) NOT NULL,
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`isbn`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Review` (
     `id` VARCHAR(191) NOT NULL,
-    `title` VARCHAR(300) NOT NULL,
+    `title` VARCHAR(200) NOT NULL,
     `content` LONGTEXT NOT NULL,
+    `memory` VARCHAR(1000) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `bookId` VARCHAR(191) NOT NULL,
+    `isbn` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -47,7 +50,7 @@ CREATE TABLE `Comment` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Review` ADD CONSTRAINT `Review_bookId_fkey` FOREIGN KEY (`bookId`) REFERENCES `Book`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Review` ADD CONSTRAINT `Review_isbn_fkey` FOREIGN KEY (`isbn`) REFERENCES `Book`(`isbn`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Review` ADD CONSTRAINT `Review_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
