@@ -11,6 +11,21 @@ export class ReviewService {
     this.bookService = new BookService();
   }
 
+  async getReview(id: string) {
+    const review = await database.review.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    if (!review) return null;
+
+    return new ReviewDTO(review);
+  }
+
   async getReviews(isbn: string) {
     const reviews = await database.review.findMany({
       where: {

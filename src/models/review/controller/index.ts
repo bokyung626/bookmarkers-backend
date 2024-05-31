@@ -31,7 +31,11 @@ export class ReviewController {
 
   async searchReviewById(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-    // const book = await this.reviewService.getReview(id);
+    const review = await this.reviewService.getReview(id);
+
+    if (!review) throw { status: 404, message: "존재하지 않는 리뷰 입니다." };
+
+    res.status(200).json(review);
   }
 
   async searchReviewByISBN(req: Request, res: Response, next: NextFunction) {

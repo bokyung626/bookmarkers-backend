@@ -18,6 +18,7 @@ export class AuthController {
     this.router.post("/login", this.login.bind(this));
     this.router.post("/register", this.register.bind(this));
     this.router.post("/refresh", this.refresh.bind(this));
+    this.router.get("/check", authJWT, this.check.bind(this));
   }
 
   // 회원가입 API
@@ -66,7 +67,6 @@ export class AuthController {
 
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("리프레시 토큰 발급 요청");
       const accessToken = req.body.accessToken;
       const refreshToken = req.cookies.refreshToken;
 
@@ -86,6 +86,13 @@ export class AuthController {
     } catch (error) {
       next(error);
     }
+  }
+
+  async check(req: Request, res: Response, next: NextFunction) {
+    // authJWT를 문제없이 거쳤을 경우
+    res.status(200).json({
+      isAuthenticated: true,
+    });
   }
 }
 
