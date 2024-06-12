@@ -1,35 +1,31 @@
 import { Comment } from "../../../types";
 import { User } from "../../../types/user";
-import { CommentDTO } from "../../comment/dto/comment.dto";
 import { UserDTO } from "../../users/dto";
+import { ChildCommentDTO } from "./childComment.dto";
 
-export class ReviewDTO {
+export class CommentDTO {
   id: string;
-  title: string;
   content: string;
-  memory: string;
+  reviewId: string;
   createdAt: Date;
-  isbn: string;
   user: UserDTO;
-  comments: CommentDTO[];
+  childComments: ChildCommentDTO[];
 
   constructor(props: {
     id: string;
-    title: string;
     content: string;
-    memory: string;
+    reviewId: string;
     createdAt: Date;
-    isbn: string;
     user: User;
-    comments: Comment[];
+    comments: ChildCommentDTO[];
   }) {
     this.id = props.id;
-    this.title = props.title;
     this.content = props.content;
-    this.memory = props.memory;
+    this.reviewId = props.reviewId;
     this.createdAt = props.createdAt;
-    this.isbn = props.isbn;
     this.user = new UserDTO(props.user);
-    this.comments = props.comments.map((comment) => new CommentDTO(comment));
+    this.childComments = props.comments.map(
+      (childComment) => new ChildCommentDTO(childComment)
+    );
   }
 }

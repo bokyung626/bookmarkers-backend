@@ -3,7 +3,7 @@ import { User } from "../../../types/user";
 import { CommentDTO } from "../../comment/dto/comment.dto";
 import { UserDTO } from "../../users/dto";
 
-export class ReviewDTO {
+export class ReviewsDTO {
   id: string;
   title: string;
   content: string;
@@ -11,7 +11,6 @@ export class ReviewDTO {
   createdAt: Date;
   isbn: string;
   user: UserDTO;
-  comments: CommentDTO[];
 
   constructor(props: {
     id: string;
@@ -21,7 +20,6 @@ export class ReviewDTO {
     createdAt: Date;
     isbn: string;
     user: User;
-    comments: Comment[];
   }) {
     this.id = props.id;
     this.title = props.title;
@@ -30,6 +28,5 @@ export class ReviewDTO {
     this.createdAt = props.createdAt;
     this.isbn = props.isbn;
     this.user = new UserDTO(props.user);
-    this.comments = props.comments.map((comment) => new CommentDTO(comment));
   }
 }
