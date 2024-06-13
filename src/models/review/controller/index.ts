@@ -3,6 +3,7 @@ import axios from "axios";
 import { authJWT } from "../../../middleware";
 import { ReviewService } from "../service";
 import { writeReviewDTO } from "../dto/writeReview.dto";
+import { updateReviewDTO } from "../dto/updateReview.dto";
 
 interface User {
   id: string;
@@ -24,25 +25,34 @@ export class ReviewController {
   }
 
   init() {
-    this.router.get("/:id", this.searchReviewById.bind(this));
-    this.router.get("/isbn/:id", this.searchReviewByISBN.bind(this));
+    this.router.get("/:postId", this.searchReviewById.bind(this));
+    this.router.get("/isbn/:isbn", this.searchReviewByISBN.bind(this));
     this.router.post("/", authJWT, this.createReview.bind(this));
+    this.router.patch("/:postId", authJWT, this.updateReview.bind(this));
+    this.router.delete("/:postId", authJWT, this.deleteReview.bind(this));
   }
 
   async searchReviewById(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
-    const review = await this.reviewService.getReview(id);
+    try {
+      const { postId } = req.params;
 
-    if (!review) throw { status: 404, message: "존재하지 않는 리뷰 입니다." };
+      const review = await this.reviewService.getReview(postId);
 
-    res.status(200).json(review);
+      res.status(200).json(review);
+    } catch (err) {
+      next(err);
+    }
   }
 
   async searchReviewByISBN(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
-    const reviews = await this.reviewService.getReviews(id);
+    try {
+      const { isbn } = req.params;
+      const reviews = await this.reviewService.getReviews(isbn);
 
-    res.status(200).json(reviews);
+      res.status(200).json(reviews);
+    } catch (err) {
+      next(err);
+    }
   }
 
   async createReview(req: Request, res: Response, next: NextFunction) {
@@ -62,7 +72,33 @@ export class ReviewController {
 
       if (newReviewId) res.status(201).json(newReviewId);
     } catch (err) {
-      console.log(err);
+      next(err);
+    }
+  }
+
+  async deleteReview(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { postId } = req.params;
+
+      await this.reviewService.deleteReview(postId, req.user);
+      res.status(204).json({});
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateReview(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { postId } = req.params;
+      const body = req.body;
+
+      await this.reviewService.updateReview(
+        new updateReviewDTO({ postId, ...body })
+      );
+
+      res.status(204).json({});
+    } catch (err) {
+      next(err);
     }
   }
 }

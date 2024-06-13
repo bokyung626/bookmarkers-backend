@@ -25,14 +25,9 @@ export class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     const body = await req.body;
     try {
-      const { accessToken, refreshToken } = await this.authService.register(
-        new RegisterDTO(body)
-      );
+      await this.authService.register(new RegisterDTO(body));
 
-      res.status(200).json({
-        accessToken,
-        refreshToken,
-      });
+      res.status(200).json({});
     } catch (error) {
       next(error);
     }
@@ -43,12 +38,8 @@ export class AuthController {
     try {
       const body = req.body;
 
-      const { accessToken, refreshToken } = await this.authService.login(
-        new LoginDTO(body)
-      );
-
-      // 리퀘스트 헤더에서 토큰 받아옴
-      const token = req.cookies.accessToken;
+      const { userData, accessToken, refreshToken } =
+        await this.authService.login(new LoginDTO(body));
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true, // httpOnly 속성 추가
@@ -57,6 +48,7 @@ export class AuthController {
       });
 
       res.status(200).json({
+        userData,
         accessToken,
         refreshToken,
       });
