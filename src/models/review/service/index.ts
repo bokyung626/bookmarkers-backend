@@ -3,7 +3,8 @@ import { writeReviewDTO } from "../dto/writeReview.dto";
 import { BookService } from "../../book/service";
 import { findBookbyISBN } from "../../../utils/naverAPI";
 import { addBookDTO } from "../../book/dto/addBook.dto";
-import { ReviewDTO } from "../dto/review.dto";
+import { ReviewsDTO } from "../dto/reviews.dto";
+import { updateReviewDTO } from "../dto/updateReview.dto";
 
 export class ReviewService {
   bookService;
@@ -18,12 +19,32 @@ export class ReviewService {
       },
       include: {
         user: true,
+        comments: {
+          where: {
+            parentCommentId: null,
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            user: true,
+            childComments: {
+              include: {
+                user: true,
+              },
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
       },
     });
 
     if (!review) return null;
 
-    return new ReviewDTO(review);
+    return review;
+    // return new ReviewDTO(review);
   }
 
   async getReviews(isbn: string) {
@@ -34,9 +55,12 @@ export class ReviewService {
       include: {
         user: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
-    return reviews.map((review) => new ReviewDTO(review));
+    return reviews.map((review) => new ReviewsDTO(review));
   }
 
   async createReview(props: writeReviewDTO) {
@@ -76,5 +100,38 @@ export class ReviewService {
       },
     });
     return newReview.id;
+  }
+
+  async updateReview(props: updateReviewDTO) {
+    const newReview = await database.review.update({
+      where: {
+        id: props.id,
+      },
+      data: {
+        title: props.title,
+        content: props.content,
+        memory: props.memory,
+      },
+    });
+    return newReview.id;
+  }
+
+  async deleteReview(reviewId: string, user: any) {
+    const review = await database.review.findUnique({
+      where: {
+        id: reviewId,
+      },
+    });
+
+    if (!review) throw { status: 404, message: "리뷰를 찾을 수 없습니다." };
+
+    if (review.userId !== user.id)
+      throw { status: 403, message: "본인의 글만 삭제할 수 있습니다." };
+
+    await database.review.delete({
+      where: {
+        id: review.id,
+      },
+    });
   }
 }

@@ -1,5 +1,5 @@
 import database from "../../../database";
-import { CreateUserDTO } from "../../users/dto";
+import { CreateUserDTO, UserDTO } from "../../users/dto";
 import { UserService } from "../../users/service";
 import { LoginDTO, RegisterDTO } from "../dto";
 import jwt from "jsonwebtoken";
@@ -32,16 +32,7 @@ export class AuthService {
       })
     );
 
-    const accessToken = jwt.sign({ id: newUserId }, process.env.JWT_KEY!, {
-      expiresIn: "2h",
-    });
-
-    // Refresh Token
-    const refreshToken = jwt.sign({ id: newUserId }, process.env.JWT_KEY!, {
-      expiresIn: "14d",
-    });
-
-    return { accessToken, refreshToken };
+    return newUserId;
   }
 
   async login(props: LoginDTO) {
@@ -62,7 +53,9 @@ export class AuthService {
       expiresIn: "14d",
     });
 
-    return { accessToken, refreshToken };
+    const userData = new UserDTO(user);
+
+    return { userData, accessToken, refreshToken };
   }
 
   async refresh(accessToken: string, refreshToken: string) {
