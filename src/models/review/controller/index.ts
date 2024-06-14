@@ -26,7 +26,7 @@ export class ReviewController {
 
   init() {
     this.router.get("/:postId", this.searchReviewById.bind(this));
-    this.router.get("/isbn/:isbn", this.searchReviewByISBN.bind(this));
+    this.router.get("/", this.searchReviews.bind(this));
     this.router.post("/", authJWT, this.createReview.bind(this));
     this.router.patch("/:postId", authJWT, this.updateReview.bind(this));
     this.router.delete("/:postId", authJWT, this.deleteReview.bind(this));
@@ -44,10 +44,15 @@ export class ReviewController {
     }
   }
 
-  async searchReviewByISBN(req: Request, res: Response, next: NextFunction) {
+  async searchReviews(req: Request, res: Response, next: NextFunction) {
     try {
-      const { isbn } = req.params;
-      const reviews = await this.reviewService.getReviews(isbn);
+      const { isbn, userId } = req.query;
+
+      const filters: any = {};
+      if (isbn) filters.isbn = isbn;
+      if (userId) filters.userId = userId;
+
+      const reviews = await this.reviewService.getReviews(filters);
 
       res.status(200).json(reviews);
     } catch (err) {
@@ -64,6 +69,7 @@ export class ReviewController {
         new writeReviewDTO({
           isbn: body.isbn,
           title: body.title,
+          image: body.image,
           content: body.content,
           memory: body.memory,
           userId: user.id,
