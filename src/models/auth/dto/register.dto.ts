@@ -13,12 +13,14 @@ export class RegisterDTO {
     nickname: string;
     email: string;
     password: string;
-    profileUrl: string;
+    profileImage: string;
   }) {
     this.nickname = props.nickname;
     this.email = props.email;
     this.password = props.password;
-    this.profileImage = props.profileUrl ?? undefined;
+    this.profileImage =
+      props.profileImage ??
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
   }
 
   async hashPassword() {

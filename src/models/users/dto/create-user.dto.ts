@@ -4,15 +4,15 @@ export class CreateUserDTO {
   password: string;
   profileImage: string;
 
-  constructor(user: {
+  constructor(props: {
     nickname: string;
     email: string;
     password: string;
     profileImage: string;
   }) {
-    this.nickname = user.nickname;
-    this.email = user.email;
-    this.password = user.password;
-    this.profileImage = user.profileImage ?? "";
+    this.nickname = props.nickname;
+    this.email = props.email;
+    this.password = props.password;
+    this.profileImage = props.profileImage;
   }
 }
