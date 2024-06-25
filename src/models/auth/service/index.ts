@@ -21,9 +21,16 @@ export class AuthService {
   }
 
   async register(props: RegisterDTO) {
-    const isExist = await this.userService.checkUserByEmail(props.email);
+    const isExistEmail = await this.userService.checkUserByEmail(props.email);
+    if (isExistEmail)
+      throw { status: 400, message: "이미 존재하는 이메일 입니다." };
 
-    if (isExist) throw { status: 400, message: "이미 존재하는 이메일 입니다." };
+    const isExistNickname = await this.userService.checkUserByNickname(
+      props.nickname
+    );
+
+    if (isExistNickname)
+      throw { status: 401, message: "이미 존재하는 닉네임 입니다." };
 
     const newUserId = await this.userService.createUser(
       new CreateUserDTO({
