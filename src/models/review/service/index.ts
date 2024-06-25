@@ -47,17 +47,17 @@ export class ReviewService {
     // return new ReviewDTO(review);
   }
 
-  async getReviews(isbn: string) {
+  async getReviews(skip: number, take: number, filters: any) {
     const reviews = await database.review.findMany({
-      where: {
-        isbn,
-      },
+      where: filters,
       include: {
         user: true,
       },
       orderBy: {
         createdAt: "desc",
       },
+      skip,
+      take,
     });
 
     return reviews.map((review) => new ReviewsDTO(review));
@@ -87,6 +87,7 @@ export class ReviewService {
         title: props.title,
         content: props.content,
         memory: props.memory,
+        image: props.image,
         book: {
           connect: {
             isbn: props.isbn,
@@ -103,6 +104,7 @@ export class ReviewService {
   }
 
   async updateReview(props: updateReviewDTO) {
+    console.log(props);
     const newReview = await database.review.update({
       where: {
         id: props.id,
