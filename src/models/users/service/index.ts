@@ -15,6 +15,17 @@ export class UserService {
     return user;
   }
 
+  async checkUserByNickname(nickname: string) {
+    const user = database.user.findUnique({
+      where: {
+        nickname,
+      },
+    });
+
+    if (!user) return false;
+    return user;
+  }
+
   async findUserById(id: string) {
     const user = await database.user.findUnique({
       where: {
@@ -27,12 +38,28 @@ export class UserService {
     return user;
   }
 
+  async findIdByNickname(nickname: string) {
+    const user = await database.user.findUnique({
+      where: {
+        nickname,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) return false;
+
+    return user;
+  }
+
   async createUser(props: CreateUserDTO) {
     const newUser = await database.user.create({
       data: {
         email: props.email,
         nickname: props.nickname,
         password: props.password,
+        profileImage: props.profileImage,
       },
     });
     // 새로운 유저의 id 반환
