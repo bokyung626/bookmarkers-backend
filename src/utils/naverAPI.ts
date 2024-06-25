@@ -17,7 +17,6 @@ export const findBookbyISBN = async (isbn: string) => {
     );
 
     if (book.status === 200) {
-      console.log("책이에용");
       return book.data.items[0];
     }
   } catch (error) {

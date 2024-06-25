@@ -44,6 +44,7 @@ model Review{
   content String @db.LongText
   memory String @db.VarChar(1000)
   createdAt DateTime @default(now())
+  image String @db.VarChar(300)
 
   isbn String
   book Book @relation(fields: [isbn], references: [isbn])
@@ -59,7 +60,7 @@ model Comment{
   createdAt DateTime @default(now())
 
   parentCommentId String?
-  parentComment Comment? @relation("parentComment", fields: [parentCommentId], references: [id])
+  parentComment Comment? @relation("parentComment", fields: [parentCommentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   userId String
   user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)

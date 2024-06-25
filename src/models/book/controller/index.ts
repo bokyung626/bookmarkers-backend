@@ -69,7 +69,7 @@ export class BookController {
 
       if (book.status === 200) {
         //console.log(book.data);
-        res.status(200).json(book.data.items[0]);
+        res.status(200).json(book.data);
       }
     } catch (error) {
       res
