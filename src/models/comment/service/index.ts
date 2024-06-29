@@ -1,5 +1,5 @@
 import database from "../../../database";
-import { WriteCommentProps, WriteReplyProps } from "../../../types";
+import { WriteCommentProps, WriteReplyProps } from "comment";
 import { UserService } from "../../users/service";
 import { ChildCommentDTO } from "../dto/childComment.dto";
 import { CommentDTO } from "../dto/comment.dto";

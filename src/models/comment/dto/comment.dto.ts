@@ -1,5 +1,5 @@
-import { Comment } from "../../../types";
-import { User } from "../../../types/user";
+import { Comment } from "comment";
+import { User } from "user";
 import { UserDTO } from "../../users/dto";
 import { ChildCommentDTO } from "./childComment.dto";
 

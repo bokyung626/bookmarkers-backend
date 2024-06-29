@@ -1,4 +1,4 @@
-import { User } from "../../../types/user";
+import { User } from "user";
 import { UserDTO } from "../../users/dto";
 
 export class ChildCommentDTO {

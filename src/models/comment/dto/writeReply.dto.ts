@@ -1,4 +1,4 @@
-import { WriteReplyProps } from "../../../types";
+import { WriteReplyProps } from "comment";
 
 export class writeReplyDTO {
   content: string;
